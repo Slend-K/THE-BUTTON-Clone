@@ -1,5 +1,3 @@
-# testing commit from vscode
-
 from tkinter import *
 import tkinter as Tk
 from PIL import Image, ImageTk
