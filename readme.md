@@ -1,6 +1,6 @@
 # THE BUTTON by Slend
 A little coding project embarked on by Slender the Blender, over about four or five days. I'll admit, nothing much about this is original apart from the code and the text at the bottom (some were inspired by the real game). Why? This is just a clone of a game someone else made. In short I had a project idea and I put it to action.
-
+ 
 Coded mostly by Slend, using Google and a little bit of ChatGPT as help for the bits I couldn't quite do myself.
 
 The amount of clicks is stored in *clicks.txt* because I wanted it to, like the real THE BUTTON game, track the amount of clicks even after closing and re-opening the game. Yes I know there definitely is a better way of doing it but hey-ho.
