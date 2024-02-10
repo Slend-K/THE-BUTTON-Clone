@@ -3,7 +3,7 @@ import tkinter as Tk
 from PIL import Image, ImageTk
 import pygame
 import random
-
+# Test innit bruv
 def check_for_invalid_click_amounts():
     with open("clicks.txt", "r+") as clicks_reader:
         amount = int(clicks_reader.read().strip())
