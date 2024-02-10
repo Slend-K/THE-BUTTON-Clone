@@ -127,7 +127,7 @@ amount_of_clicks = Tk.StringVar()
 with open("clicks.txt", "r") as clicks_reader:
     amount_of_clicks.set(int(clicks_reader.read()))
 
-image_filepath = "C:\\Users\\kyleo\\OneDrive\\Documents\\Desktop\\VS Code\\!Things I Coded or Am Coding\\Python\\Games\\THE BUTTON Clone\\button_main_image.png"
+image_filepath = "button_main_image.png"
 image = Image.open(image_filepath)
 main_button_photo = ImageTk.PhotoImage(image)
 
