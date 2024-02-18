@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 import pygame
 import random
 
-def check_for_invalid_click_amounts():
+def check_for_invalid_click_amounts(): # Only checks the current click amounts, not the best/total amount(s).
     with open("clicks.txt", "r+") as clicks_reader:
         amount = int(clicks_reader.read().strip())
         if int(amount) < 0 or int(amount) > 100:
@@ -14,9 +14,24 @@ def check_for_invalid_click_amounts():
             clicks_reader.truncate()
             clicks_reader.close()
 
-def update_button():
+def new_pb_check(current_clicks):
+    with open("best_amt_of_clicks.txt", "r+") as f:
+        best_amount_of_clicks_count = int(f.read().strip())
+        if current_clicks > best_amount_of_clicks_count:
+            best_amount_of_clicks = current_clicks
+            f.seek(0)
+            f.write(str(best_amount_of_clicks))
+            f.truncate()
+            f.close()
+
+def update_button(): # Called this because it was originally going to be a label on a button but that's difficult in Tkinter because of label backgrounds and stuff. Might implement it one day.
     with open("clicks.txt", "r") as clicks_reader:
-        amount_of_clicks.set(clicks_reader.read().strip())
+        amount_of_clicks.set(f"Current clicks: {clicks_reader.read().strip()}")
+    with open("total_clicks.txt", "r") as total_clicks_reader:
+        total_amount_of_clicks.set(f"Total clicks: {total_clicks_reader.read().strip()}")
+    with open("best_amt_of_clicks.txt", "r") as best_amt_of_clicks_reader:
+        # Yes this does set it for every click but eh whatever.
+        best_amount_of_clicks.set(f"Best: {best_amt_of_clicks_reader.read().strip()}")
     window.after(75, update_button)
 
 pygame.mixer.init() # Initialising Pygame to play sound(s)
@@ -45,7 +60,14 @@ def add_click():
             f.seek(0)
             f.write(str(amount_of_clicks))
             f.close()
+        with open("total_clicks.txt", "r+") as f:
+            total_amount_of_clicks = int(f.read().strip())
+            total_amount_of_clicks += 1
+            f.seek(0)
+            f.write(str(total_amount_of_clicks))
+            f.close()
 
+        new_pb_check(current_clicks=amount_of_clicks)
         set_button_clickable(False)
         window.after(600, lambda: set_button_clickable(True))
         reset_counter()
@@ -99,7 +121,11 @@ alternating_text = [
     "If a tomato is a fruit, does that mean ketchup is a smoothie?",
     "Coded by Slend, using a bit of Google...\n...and a small bit of ChatGPT.",
     "This button... why was it ever made?",
-    "I'm surprised all this fit into only 146 lines!"
+    "I'm surprised all this fit into only (insert number here) lines!", # might leave it like that for the memes (and because im lazy)
+    "Why was Cinderalla so bad at football?\nShe kept running away from the ball.",
+    "What did the horse say after it tripped?\nHelp, I've fallen and I can't giddyup!",
+    "What do you call an angry carrot?\nA steamed veggie!",
+    "How do you make an eggroll?\nYou push it!"
 ]
 
 def update_changing_label_text():
@@ -110,7 +136,7 @@ def update_changing_label_text():
 bgcolour = "#f2e5d9"
 
 window = Tk.Tk()
-window.geometry("640x525")
+window.geometry("640x650")
 window.title("THE BUTTON Clone")
 window.config(bg=bgcolour)
 window.resizable(False, False)
@@ -119,13 +145,17 @@ icon = Image.open("button_main_image.png")
 icon_photo = ImageTk.PhotoImage(icon)
 window.wm_iconphoto(False, icon_photo)
 
-header = Tk.Label(window, text="THE BUTTON Clone", font=("Century Gothic", "32"), bg=bgcolour)
+header = Tk.Label(window, text="THE BUTTON Clone", font=("Century Gothic", "32", "underline"), bg=bgcolour)
 header.pack(pady=2)
 
 amount_of_clicks = Tk.StringVar()
+total_amount_of_clicks = Tk.StringVar()
+best_amount_of_clicks = Tk.StringVar()
 
-with open("clicks.txt", "r") as clicks_reader:
-    amount_of_clicks.set(int(clicks_reader.read()))
+with open("clicks.txt", "r") as clicks_reader:                  # These might be redundant
+    amount_of_clicks.set(int(clicks_reader.read()))             # but I'm keeping them
+with open("total_clicks.txt", "r") as total_clicks_reader:      # just in case they're
+    total_amount_of_clicks.set(int(total_clicks_reader.read())) # needed lol, we'll see
 
 image_filepath = "button_main_image.png"
 image = Image.open(image_filepath)
@@ -133,13 +163,19 @@ main_button_photo = ImageTk.PhotoImage(image)
 
 # mainbutton = Tk.Button(window, textvariable=amount_of_clicks, image=PhotoImage("C:\\Users\\kyleo\\OneDrive\\Documents\\Desktop\\VS Code\\!Things I Coded or Am Coding\\Python\\Games\\THE BUTTON Clone\\button_main_image.png"), command=add_click) # change filepath to that which is stored on the usb when you can
 mainbutton = Tk.Button(window, textvariable=amount_of_clicks, image=main_button_photo, command=add_click, bg=bgcolour, state="normal") # change filepath to that which is stored on the usb when you can
-mainbutton.place(x="320", y="290", anchor="center")
+mainbutton.place(x="320", y="395", anchor="center")
 
-amt_of_clicks_label = Tk.Label(window, textvariable=amount_of_clicks, font=("Century Gothic", "40"), bg=bgcolour)
+amt_of_clicks_label = Tk.Label(window, textvariable=amount_of_clicks, font=("Century Gothic", "40", "bold", "italic"), bg=bgcolour)
 amt_of_clicks_label.place(x="320", y="90", anchor="center")
 
-changing_text_label = Tk.Label(window, text="THIS IS A TEST", font=("Century Gothic", "16"), bg=bgcolour)
-changing_text_label.place(x="320", y="480", anchor="center")
+total_amt_of_clicks_label = Tk.Label(window, textvariable=total_amount_of_clicks, font=("Century Gothic", "30"), bg=bgcolour)
+total_amt_of_clicks_label.place(x="320", y="150", anchor="center")
+
+best_amt_of_clicks_label = Tk.Label(window, textvariable=best_amount_of_clicks, font=("Century Gothic", "30"), bg=bgcolour)
+best_amt_of_clicks_label.place(x="320", y="200", anchor="center")
+
+changing_text_label = Tk.Label(window, text="THIS IS A TEST", font=("Century Gothic", "16"), bg=bgcolour) # why does this say "THIS IS A TEST"? idk, it works though so im not touching it.
+changing_text_label.place(x="320", y="592.5", anchor="center") # decimal y value because 2.5 is cooler than 3
 
 update_button()
 check_for_invalid_click_amounts()
