@@ -27,8 +27,10 @@ def new_pb_check(current_clicks):
 def update_button(): # Called this because it was originally going to be a label on a button but that's difficult in Tkinter because of label backgrounds and stuff. Might implement it one day.
     with open("clicks.txt", "r") as clicks_reader:
         amount_of_clicks.set(f"Current clicks: {clicks_reader.read().strip()}")
+    with open("resets.txt", "r") as resets_counter_reader:
+        reset_count = resets_counter_reader.read().strip()
     with open("total_clicks.txt", "r") as total_clicks_reader:
-        total_amount_of_clicks.set(f"Total clicks: {total_clicks_reader.read().strip()}")
+        total_amount_of_clicks.set(f"Total clicks: {total_clicks_reader.read().strip()} ({reset_count} resets)")
     with open("best_amt_of_clicks.txt", "r") as best_amt_of_clicks_reader:
         # Yes this does set it for every click but eh whatever.
         best_amount_of_clicks.set(f"Best: {best_amt_of_clicks_reader.read().strip()}")
@@ -88,6 +90,13 @@ def reset_counter():
             resetter.close()
             pygame.mixer.music.load("KABOOM.mp3")
             pygame.mixer.Channel(2).play(pygame.mixer.Sound("KABOOM.mp3"))
+
+            with open("resets.txt", "r+") as f:
+                resets = int(f.read().strip())
+                resets += 1
+                f.seek(0)
+                f.write(str(resets))
+                f.close()
     else:
         print("Lucky! Keeping counter as it should be.")
 
