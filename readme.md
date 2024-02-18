@@ -44,4 +44,4 @@ If you use this to make any sort of tutorial or use it on any websites, whatever
 
 ---
 
-No, I do not know how to remove the change comments on the .mp3 files, yes they will remain as "Testing committing directly from VSCode forever". However, (I think) I did figure out how to give different files different commit messages in one push. Wow!
+No, I do not know how to remove the change comments on the .mp3 files, yes they will remain as "Testing committing directly from VSCode" forever. However, (I think) I did figure out how to give different files different commit messages in one push. Wow!
